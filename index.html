@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <title>Интерактивті Сабақ Платформасы</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; background: #f4f4f9; }
+        .card { background: white; padding: 20px; border-radius: 8px; display: inline-block; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>AI Интерактивті Сабақ</h2>
+        <p id="status">Қосылуда...</p>
+        <div id="content">
+            <input type="text" id="answerInput" placeholder="Жауабыңызды жазыңыз...">
+            <br><br>
+            <button onclick="sendAnswer()">Жіберу</button>
+        </div>
+    </div>
+
+    <!-- Socket.io клиент кітапханасы -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on('connect', () => {
+            document.getElementById('status').innerText = 'Серверге сәтті қосылды!';
+        });
+
+        socket.on('receive-question', (question) => {
+            alert('Жаңа сұрақ: ' + question);
+        });
+
+        function sendAnswer() {
+            const ans = document.getElementById('answerInput').value;
+            socket.emit('submit-answer', { answer: ans });
+            alert('Жауап жіберілді!');
+        }
+    </script>
+</body>
+</html>
